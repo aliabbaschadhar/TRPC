@@ -15,13 +15,15 @@ const appRouter = router({
   createTodo: publicProcedure
     .input(todoInputType)
     .mutation(async (opts) => {
+      const username = opts.ctx.username;
       const title = opts.input.title;
       const description = opts.input.description;
       console.log(title, description)
       // do DB stuff
 
+      console.log(username)
       return {
-        id: randomUUIDv5("example.com", "dns")
+        todoId: randomUUIDv5(title, "dns")
       }
     }),
 
@@ -46,6 +48,16 @@ const appRouter = router({
 
 const server = createHTTPServer({
   router: appRouter,
+  createContext(opts) {
+    let authHeader = opts.req.headers["authorization"];
+    //@ts-ignore
+    console.log(authHeader?.split(" ")[1])
+
+    //jwt.verify() // check whether the header is correct and valid 
+    return {
+      username: "shaka-g"
+    }
+  }
 })
 
 server.listen(3000, () => {

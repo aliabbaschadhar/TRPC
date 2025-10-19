@@ -8,7 +8,12 @@ const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
       url: 'http://localhost:3000',
-    }),
+      async headers() {
+        return {
+          Authorization: "Bearer 12323" // In real world we get this token from localstorage ==> "Bearer localstorage.getItem()";
+        }
+      }
+    })
   ],
 });
 
