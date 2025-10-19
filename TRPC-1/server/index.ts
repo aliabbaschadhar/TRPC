@@ -1,6 +1,7 @@
 import { publicProcedure, router } from "./trpc";
 import { z } from "zod";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
+import { randomUUIDv5 } from "bun"
 
 const todoInputType = z.object({
   title: z.string(),
@@ -20,7 +21,7 @@ const appRouter = router({
       // do DB stuff
 
       return {
-        id: "1"
+        id: randomUUIDv5("example.com", "dns")
       }
     }),
 
@@ -47,7 +48,9 @@ const server = createHTTPServer({
   router: appRouter,
 })
 
-server.listen(3000);
+server.listen(3000, () => {
+  console.log("Server is listening at 3000")
+});
 
 // Export type router type signature,
 // NOT the router itself, ONLY TYPE
